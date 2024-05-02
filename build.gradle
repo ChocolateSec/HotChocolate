@@ -1,0 +1,45 @@
+plugins {
+    id "java"
+    id 'fr.il_totore.manadrop' version '0.4.3'
+}
+
+group = "de.chocolatesec.hotchocolate"
+version = "0.0.1"
+
+def mainClassName = "HotChocolate"
+def mainClassPath = group + "." + mainClassName
+
+repositories {
+    mavenCentral() // Use Maven Central repository for public libraries
+    mavenLocal() // Use local Maven repository for Spigot compiled by BuildTools
+}
+
+dependencies {
+    compileOnly 'org.spigotmc:spigot-api:1.20.4-R0.1-SNAPSHOT' // OSS Spigot API
+    compileOnly 'org.spigotmc:spigot:1.20.4-R0.1-SNAPSHOT' // Spigot implementation including NMS classes
+}
+
+def javaVersion = 21
+java {
+    sourceCompatibility = javaVersion
+    targetCompatibility = javaVersion
+    toolchain.languageVersion = JavaLanguageVersion.of(javaVersion)
+}
+
+sourceSets.main.java.srcDirs += ['src/main/java']
+
+jar {
+  manifest {
+    attributes "Main-Class": mainClassPath
+  }
+}
+
+// https://github.com/Iltotore/ManaDrop/wiki/Spigot#pluginyml-generation
+spigot {
+    desc {
+        authors "acejr1337 Kitt3120"
+        main mainClassPath
+    }
+}
+
+processResources.finalizedBy(spigotPlugin)
