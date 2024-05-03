@@ -4,7 +4,7 @@ plugins {
 }
 
 group = "de.chocolatesec.hotchocolate"
-version = "0.0.0"
+version = "0.0.1"
 
 def mainClassName = "HotChocolate"
 def mainClassPath = group + "." + mainClassName
