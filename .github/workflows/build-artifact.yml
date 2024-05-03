@@ -1,11 +1,11 @@
-name: Check for successful compilation
+name: Build artifacts and publish as GitHub release
 
 on:
-  pull_request:
+  push:
     branches: ["main"]
 
 jobs:
-  check:
+  build:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout source branch
@@ -24,3 +24,9 @@ jobs:
         run: util/runBuildTools.sh
       - name: Run Gradle build
         run: ./gradlew clean build
+      - name: Read source branch version
+        run: echo "VERSION=$(cat build.gradle | grep 'version = ' | cut -d'"' -f2)" >> $GITHUB_ENV
+      - name: Create release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: gh release create "$VERSION" --repo="$GITHUB_REPOSITORY" --title="Release $VERSION" --generate-notes --latest "./build/libs/HotChocolate-$VERSION.jar"
