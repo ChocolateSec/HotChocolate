@@ -28,12 +28,6 @@ java {
 
 sourceSets.main.java.srcDirs += ['src/main/java']
 
-jar {
-  manifest {
-    attributes "Main-Class": mainClassPath
-  }
-}
-
 // https://github.com/Iltotore/ManaDrop/wiki/Spigot#pluginyml-generation
 spigot {
     desc {
