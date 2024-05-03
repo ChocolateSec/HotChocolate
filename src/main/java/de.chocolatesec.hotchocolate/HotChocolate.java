@@ -1,3 +1,5 @@
+package de.chocolatesec.hotchocolate;
+
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class HotChocolate extends JavaPlugin {

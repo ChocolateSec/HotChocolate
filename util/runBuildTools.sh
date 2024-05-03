@@ -9,3 +9,4 @@ curl -o BuildTools.jar https://hub.spigotmc.org/jenkins/job/BuildTools/lastSucce
 java -jar BuildTools.jar
 
 cd $CWD
+rm -rf /tmp/chocolatesec/buildtools
