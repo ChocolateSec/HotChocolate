@@ -1,0 +1,29 @@
+name: Check version bump
+
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+    branches: ["main"]
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout source branch
+        uses: actions/checkout@v2
+      - name: Read source branch version
+        run: echo "VERSION=$(cat build.gradle | grep 'version = ' | cut -d'"' -f2)" >> $GITHUB_ENV
+      - name: Checkout main branch
+        uses: actions/checkout@v2
+        with:
+          ref: main
+      - name: Read main branch version
+        run: echo "VERSION_MAIN=$(cat build.gradle | grep 'version = ' | cut -d'"' -f2)" >> $GITHUB_ENV
+      - name: Check for version bump
+        run: |
+          if [ "$VERSION_MAIN" == "$VERSION" ]; then
+            echo "No version bump detected"
+            exit 1
+          fi
+          echo "Version bump detected"

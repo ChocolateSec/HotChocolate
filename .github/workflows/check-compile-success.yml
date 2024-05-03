@@ -1,0 +1,26 @@
+name: Check for successful compilation
+
+on:
+  pull_request:
+    branches: ["main"]
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout source branch
+        uses: actions/checkout@v2
+      - name: Install curl
+        run: sudo apt install curl
+      - name: Install git
+        run: sudo apt install git
+      - name: Install OpenJDK 21
+        run: sudo apt install openjdk-21-jdk-headless
+      - name: Set OpenJDK 21 as default
+        run: sudo update-alternatives --set java /usr/lib/jvm/java-21-openjdk-amd64/bin/java
+      - name: Install Maven
+        run: sudo apt install maven
+      - name: Run BuildTools
+        run: util/runBuildTools.sh
+      - name: Run Gradle build
+        run: ./gradlew clean build
