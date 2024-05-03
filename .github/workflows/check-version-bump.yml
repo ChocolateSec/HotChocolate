@@ -1,0 +1,31 @@
+name: Check version bump
+
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+    branches: ["main"]
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout source branch
+        uses: actions/checkout@v2
+      - name: Read source branch version
+        id: branch
+        run: echo version=$(cat build.gradle | grep -iE 'version = "([0-9]+(\\.[0-9]+)+)"' | cut -d'"' -f2) >> $GITHUB_ENV
+      - name: Checkout main branch
+        uses: actions/checkout@v2
+        with:
+          ref: main
+      - name: Read main branch version
+        id: main
+        run: echo version=$(cat build.gradle | grep -iE 'version = "([0-9]+(\\.[0-9]+)+)"' | cut -d'"' -f2) >> $GITHUB_ENV
+      - name: Check for version bump
+        run: |
+          if [ "${{ steps.branch.outputs.version }}" == "${{ steps.main.outputs.version }}" ]; then
+            echo "No version bump detected"
+            exit 1
+          fi
+          echo "Version bump detected"
