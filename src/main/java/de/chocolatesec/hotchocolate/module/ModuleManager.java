@@ -11,13 +11,15 @@ public class ModuleManager {
 
     private final PrefixedLogger logger;
     private final ArrayList<Module> modules;
+    private final ResourceTracker resourceTracker;
 
     public ModuleManager() {
         this.logger = HotChocolate.getLogger("ModuleManager");
         this.modules = new ArrayList<>();
+        this.resourceTracker = new ResourceTracker();
     }
 
-    public void enableBuiltInModules() {
+    public void loadBuiltInModules() {
         // None yet
     }
 
@@ -27,12 +29,13 @@ public class ModuleManager {
                     .warning("Request to enable module " + module.name() + " was ignored, as it is already enabled.");
             return;
         }
+        this.modules.add(module);
 
         registerCommands(module);
+        resourceTracker.registerEventListeners(module);
 
         try {
             module.onEnable();
-            this.modules.add(module);
         } catch (Exception e) {
             if (!module.silent()) {
                 this.logger.log(Level.SEVERE, "Failed to enable module", e);
@@ -45,12 +48,13 @@ public class ModuleManager {
             this.logger.warning("Request to disable module " + module.name() + " was ignored, as it isn't enabled.");
             return;
         }
+        this.modules.remove(module);
 
         unregisterCommands(module);
+        resourceTracker.unregisterEventListeners(module);
 
         try {
             module.onDisable();
-            this.modules.remove(module);
         } catch (Exception e) {
             if (!module.silent()) {
                 this.logger.log(Level.SEVERE, "Failed to disable module", e);
@@ -69,6 +73,10 @@ public class ModuleManager {
     }
 
     private void registerCommands(Module module) {
+        if (module.commands() == null) {
+            return;
+        }
+
         for (Command command : module.commands()) {
             try {
                 boolean registered = CommandMapMagic.injectCommand(module.name(), command);
@@ -88,6 +96,10 @@ public class ModuleManager {
     }
 
     private void unregisterCommands(Module module) {
+        if (module.commands() == null) {
+            return;
+        }
+
         for (Command command : module.commands()) {
             try {
                 CommandMapMagic.purgeCommand(module.name(), command);

@@ -17,7 +17,7 @@ public class HotChocolate extends JavaPlugin {
         instance = this;
 
         moduleManager = new ModuleManager();
-        moduleManager.enableBuiltInModules();
+        moduleManager.loadBuiltInModules();
 
         getLogger().info("HotChocolate enabled!");
     }
