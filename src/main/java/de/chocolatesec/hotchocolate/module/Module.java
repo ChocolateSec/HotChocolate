@@ -30,27 +30,27 @@ public abstract class Module {
     private final ResourceBridge resourceBridge;
 
     public Module(ResourceTracker resourceTracker) {
-        this.logger = HotChocolate.getLogger(this.name());
+        this.logger = HotChocolate.getLogger(name());
         this.resourceBridge = resourceTracker.createResourceBridge(this);
     }
 
     public void onEnable() {
-        if (!this.silent()) {
-            this.logger.info("Version " + this.version() + " by " + this.author() + " has been enabled.");
+        if (!silent()) {
+            logger.info("Version " + version() + " by " + author() + " has been enabled.");
         }
     }
 
     public void onDisable() {
-        if (!this.silent()) {
-            this.logger.info("Version " + this.version() + " by " + this.author() + " has been disabled.");
+        if (!silent()) {
+            logger.info("Version " + version() + " by " + author() + " has been disabled.");
         }
     }
 
     protected PrefixedLogger getLogger() {
-        return this.logger;
+        return logger;
     }
 
     protected ResourceBridge getResourceBridge() {
-        return this.resourceBridge;
+        return resourceBridge;
     }
 }

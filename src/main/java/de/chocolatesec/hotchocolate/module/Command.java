@@ -19,18 +19,18 @@ public abstract class Command extends org.bukkit.command.Command implements Comm
     @Override
     public boolean execute(CommandSender arg0, String arg1, String[] arg2) {
         boolean success = false;
-        if (!this.testPermission(arg0)) {
+        if (!testPermission(arg0)) {
             return true;
         } else {
             try {
-                success = this.onCommand(arg0, this, arg1, arg2);
+                success = onCommand(arg0, this, arg1, arg2);
             } catch (Throwable var9) {
                 throw new CommandException("Unhandled exception executing command '" + arg1 + "'", var9);
             }
 
-            if (!success && this.usageMessage.length() > 0) {
+            if (!success && usageMessage.length() > 0) {
                 String[] var8;
-                int var7 = (var8 = this.usageMessage.replace("<command>", arg1).split("\n")).length;
+                int var7 = (var8 = usageMessage.replace("<command>", arg1).split("\n")).length;
 
                 for (int var6 = 0; var6 < var7; ++var6) {
                     String line = var8[var6];
@@ -51,7 +51,7 @@ public abstract class Command extends org.bukkit.command.Command implements Comm
         List<String> completions = null;
 
         try {
-            completions = this.onTabComplete(sender, this, alias, args);
+            completions = onTabComplete(sender, this, alias, args);
         } catch (Throwable var11) {
             StringBuilder message = new StringBuilder();
             message.append("Unhandled exception during tab completion for command '/").append(alias).append(' ');

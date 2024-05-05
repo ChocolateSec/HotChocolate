@@ -14,10 +14,10 @@ public class HotChocolate extends JavaPlugin {
     private static ModuleManager moduleManager;
 
     public void onEnable() {
-        instance = this;
+        HotChocolate.instance = this;
 
-        moduleManager = new ModuleManager();
-        moduleManager.loadBuiltInModules();
+        HotChocolate.moduleManager = new ModuleManager();
+        HotChocolate.moduleManager.loadBuiltInModules();
 
         getLogger().info("HotChocolate enabled!");
     }

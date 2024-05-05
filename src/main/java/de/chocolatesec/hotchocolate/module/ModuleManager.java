@@ -24,12 +24,11 @@ public class ModuleManager {
     }
 
     public void enable(Module module) {
-        if (this.modules.contains(module)) {
-            this.logger
-                    .warning("Request to enable module " + module.name() + " was ignored, as it is already enabled.");
+        if (modules.contains(module) && !module.silent()) {
+            logger.warning("Request to enable module " + module.name() + " was ignored, as it is already enabled.");
             return;
         }
-        this.modules.add(module);
+        modules.add(module);
 
         registerCommands(module);
         resourceTracker.registerEventListeners(module);
@@ -38,17 +37,17 @@ public class ModuleManager {
             module.onEnable();
         } catch (Exception e) {
             if (!module.silent()) {
-                this.logger.log(Level.SEVERE, "Failed to enable module", e);
+                logger.log(Level.SEVERE, "Failed to enable module", e);
             }
         }
     }
 
     public void disable(Module module) {
-        if (!this.modules.contains(module)) {
-            this.logger.warning("Request to disable module " + module.name() + " was ignored, as it isn't enabled.");
+        if (!modules.contains(module)) {
+            logger.warning("Request to disable module " + module.name() + " was ignored, as it isn't enabled.");
             return;
         }
-        this.modules.remove(module);
+        modules.remove(module);
 
         unregisterCommands(module);
         resourceTracker.unregisterEventListeners(module);
@@ -57,19 +56,19 @@ public class ModuleManager {
             module.onDisable();
         } catch (Exception e) {
             if (!module.silent()) {
-                this.logger.log(Level.SEVERE, "Failed to disable module", e);
+                logger.log(Level.SEVERE, "Failed to disable module", e);
             }
         }
     }
 
     public void disableAll() {
-        for (Module module : this.modules) {
-            this.disable(module);
+        for (Module module : modules) {
+            disable(module);
         }
     }
 
     public boolean isEnabled(Module module) {
-        return this.modules.contains(module);
+        return modules.contains(module);
     }
 
     private void registerCommands(Module module) {
@@ -81,15 +80,14 @@ public class ModuleManager {
             try {
                 boolean registered = CommandMapMagic.injectCommand(module.name(), command);
                 if (!registered && !module.silent()) {
-                    this.logger
-                            .severe("Failed to register command " + command.getName() + " for module " + module.name()
-                                    + ": Command already exists (including fallbackPrefix)");
+                    logger.severe("Failed to register command " + command.getName() + " for module " + module.name()
+                            + ": Command already exists (including fallbackPrefix)");
                 }
             } catch (SecurityException | IllegalAccessException
                     | IllegalArgumentException | NoSuchFieldException e) {
                 if (!module.silent()) {
-                    this.logger.log(Level.SEVERE, "Failed to register command " + command.getName() + " for module "
-                            + module.name(), e);
+                    logger.log(Level.SEVERE,
+                            "Failed to register command " + command.getName() + " for module " + module.name(), e);
                 }
             }
         }
@@ -105,7 +103,7 @@ public class ModuleManager {
                 CommandMapMagic.purgeCommand(module.name(), command);
             } catch (SecurityException | IllegalAccessException | IllegalArgumentException | NoSuchFieldException e) {
                 if (!module.silent()) {
-                    this.logger.log(Level.SEVERE, "Failed to unregister command " + command.getName() + " for module "
+                    logger.log(Level.SEVERE, "Failed to unregister command " + command.getName() + " for module "
                             + module.name(), e);
                 }
             }

@@ -119,10 +119,10 @@ public class ResourceBridge {
     }
 
     public Module getModule() {
-        return this.module;
+        return module;
     }
 
     public ResourceTracker getResourceTracker() {
-        return this.resourceTracker;
+        return resourceTracker;
     }
 }
