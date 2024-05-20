@@ -10,3 +10,9 @@ updates:
     directory: "/"
     schedule:
       interval: daily
+    target-branch: staging
+  - package-ecosystem: gradle
+    directory: "/"
+    schedule:
+      interval: daily
+    target-branch: staging
